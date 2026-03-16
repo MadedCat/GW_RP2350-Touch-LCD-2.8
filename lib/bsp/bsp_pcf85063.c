@@ -17,14 +17,16 @@ void bsp_pcf85063_reset(void){
 	bsp_pcf85063_reg_write_byte(PCF85063_CONTROL_1, (uint8_t *)&RESET_CMD, 1);
 }
 
-void bsp_pcf85063_init(void){
+bool bsp_pcf85063_init(void){
     uint8_t seconds = 0;
     bsp_pcf85063_reg_read(PCF85063_SECONDS, (uint8_t *)&seconds, 1);
     if (seconds & 0x80){
         printf("oscillator_stop detected\n");
         bsp_pcf85063_reset();
+        return false;
     } else {
         printf("RTC has beeing kept running!\n");
+        return true;
     }
 }
 

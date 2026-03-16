@@ -41,7 +41,7 @@ typedef enum
 #define TIMER_TEST	(1<<7)
 
 
-void bsp_pcf85063_init(void);
+bool bsp_pcf85063_init(void);
 void bsp_pcf85063_reset(void);
 void bsp_pcf85063_get_time(struct tm *now_tm);
 void bsp_pcf85063_set_time(struct tm *now_tm);

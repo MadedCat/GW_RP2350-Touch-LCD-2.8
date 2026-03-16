@@ -294,17 +294,6 @@ void software_reset(){
 
 void get_sys_time(){
 	bsp_pcf85063_get_time(&now_tm);
-    if (now_tm.tm_year < 124 || now_tm.tm_year > 130 )
-    {
-        now_tm.tm_year = 2025 - 1900; // The year starts from 1900
-        now_tm.tm_mon = 0;       // Months start from 0 (November = 10)
-        now_tm.tm_mday = 1;          // Day of the month
-        now_tm.tm_hour = 12;          // Hour
-        now_tm.tm_min = 0;            // Minute
-        now_tm.tm_sec = 0;            // Second
-        now_tm.tm_isdst = -1;         // Automatically detect daylight saving time
-        bsp_pcf85063_set_time(&now_tm);
-    }
 	sprintf(&hud_text[0],"[%02d.%02d.%04d %02d:%02d:%02d]",now_tm.tm_mday,(now_tm.tm_mon+1),now_tm.tm_year+1900,now_tm.tm_hour,now_tm.tm_min,now_tm.tm_sec);
 	//printf("%s \n",&hud_text[0]);
 }
@@ -1805,9 +1794,27 @@ int main(void){
 	//-------Init Battery Check--------	
 	
 	//-------Init Clock--------	
-	bsp_pcf85063_init();
-	busy_wait_ms(100);
-	get_sys_time();
+	if(bsp_pcf85063_init()){
+		printf("RTC Started\n");
+		busy_wait_ms(100);
+		get_sys_time();		
+	} else {
+		printf("RTC Error: reset time \n");
+    	if (now_tm.tm_year < 124 || now_tm.tm_year > 130 ){
+        	now_tm.tm_year = 2025 - 1900; // The year starts from 1900
+        	now_tm.tm_mon = 0;       // Months start from 0 (November = 10)
+        	now_tm.tm_mday = 1;          // Day of the month
+        	now_tm.tm_hour = 12;          // Hour
+        	now_tm.tm_min = 0;            // Minute
+        	now_tm.tm_sec = 0;            // Second
+        	now_tm.tm_isdst = -1;         // Automatically detect daylight saving time
+        	bsp_pcf85063_set_time(&now_tm);
+    	}
+		busy_wait_ms(100);
+		get_sys_time();
+	}
+
+	
 	//-------Init Clock--------	
 
 	//-------Launch Second core--------	
