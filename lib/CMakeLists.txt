@@ -1,0 +1,6 @@
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/bsp)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/fatfs)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/joysticks)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/sdcard)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/sound)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/video)
