@@ -871,7 +871,11 @@ uint8_t EditDialogBox(char *header,char *message,char *value,uint8_t colorFG,uin
 			need_redraw=true;
 		}
 		if(dia_pos<value_len){
-			if((value[dia_pos]<0x30)||(value[dia_pos]>0x39)) continue;
+			if((value[dia_pos]<0x30)||(value[dia_pos]>0x39)) {
+				if((KBD_LEFT)||(data_joy==D_JOY_LEFT))dia_pos--; 
+				else if((KBD_RIGHT)||(data_joy==D_JOY_RIGHT))dia_pos++;
+				continue;
+			}
 			if((KBD_UP)||(data_joy==D_JOY_UP)){
 				value[dia_pos]++;
 				if(value[dia_pos]>0x39) value[dia_pos]=0x30;
@@ -1912,18 +1916,10 @@ int main(void){
 			while(true){
 				while(!wait_kbdjoy_emu()){
 					ticker++;
-					if ((ticker%64)==0){
-						if(current_hud_mode&HM_SHOW_BATTERY){
-							get_battery_stats();
-							/*
-							battery_status++;
-							if (battery_status>10) battery_status=0;
-							*/
-						}
-					}
 					if ((ticker%32)==0){ //1966050 //65000
 						get_sys_time();
 						set_gw_sys_time();
+						get_battery_stats();
 					}					
 					busy_wait_ms(10);
 					if(ticker>131070){ticker=0;}
